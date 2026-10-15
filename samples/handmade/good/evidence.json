@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "room_id": "handmade",
+  "claims": [
+    {"id": "exit_1_clear", "type": "blocked_exit", "verdict": "fail", "value": 0.6, "unit": "m", "confidence": 0.9, "frame_ids": [1, 2]},
+    {"id": "door_1_width", "type": "door_clear_width", "verdict": "pass", "value": 0.9, "unit": "m", "confidence": 0.85, "frame_ids": [3, 4]},
+    {"id": "exit_2_clear", "type": "blocked_exit", "verdict": "not_proven", "value": null, "unit": null, "confidence": 0.0, "frame_ids": []}
+  ],
+  "coverage": {"seen_fraction": 0.8, "unseen_regions": [{"id": "exit_2_floor", "description": "Floor in front of exit_2 never in view"}]},
+  "requested_view": {"claim_ids": ["exit_2_clear"], "description": "Film the floor in front of exit_2 from about 2 m away, with the exit marker in frame"}
+}

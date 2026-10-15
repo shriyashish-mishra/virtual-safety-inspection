@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual Safety Viewer</title>
+<!--
+  Viewer v1 (T12). One static file, no build step, no network calls except to files next to it.
+  Shows, per clip: the independent checker result, a top-down plan with the exit corridor coloured by verdict,
+  each claim with the video frames behind it, the not-proven request, and precomputed Q&A from the Google adapter.
+  Serve from the repo root:  python3 -m http.server   then open  http://localhost:8000/viewer/
+    ?clip=clip2_blocked picks a demo clip (data in viewer/demo/, built by tools/synthetic_room/make_demo_data.py)
+    ?sample=pass or ?sample=fail shows the older hand-made samples in samples/ (no plan or frames)
+    ?api=https://host asks a live Google adapter (POST /ask) instead of the precomputed answers
+  Opened as a file the browser blocks reading other files: use the Open buttons to pick evidence.json and checker_report.json.
+-->
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --text: #1d1d1b; --muted: #66665f; --line: #e2e2dc;
+    --pass: #1f7a3a; --pass-bg: #e6f4ea; --fail: #b3261e; --fail-bg: #fce8e6;
+    --np: #8a5a00; --np-bg: #fff4d6; --seen: rgba(60,120,210,.25); --path: #3a5fcd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161614; --card: #1f1f1d; --text: #ecece8; --muted: #a3a39b; --line: #33332f;
+      --pass: #6dd58c; --pass-bg: #173322; --fail: #f2b8b5; --fail-bg: #3b1a18;
+      --np: #f5cf6b; --np-bg: #3a2e10; --seen: rgba(110,160,255,.28); --path: #8fb0ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 56px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  h2 { font-size: 1.05rem; margin: 0 0 8px; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  .banner { border: 1px dashed var(--np); background: var(--np-bg); color: var(--text); border-radius: 10px; padding: 8px 12px; margin: 12px 0; font-size: .88rem; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
+  .bar a, .bar label, .chip { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 8px; padding: 6px 12px; text-decoration: none; cursor: pointer; font-size: .9rem; font: inherit; font-size: .9rem; }
+  .bar a[aria-current="page"], .chip[aria-pressed="true"] { border-color: var(--text); font-weight: 600; }
+  .bar input[type=file] { display: none; }
+  .checker { display: flex; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 12px; margin: 12px 0; border: 2px solid; }
+  .checker.pass { background: var(--pass-bg); border-color: var(--pass); color: var(--text); }
+  .checker.fail { background: var(--fail-bg); border-color: var(--fail); color: var(--text); }
+  .checker .big { font-size: 2rem; font-weight: 800; letter-spacing: .04em; }
+  .checker.pass .big { color: var(--pass); } .checker.fail .big { color: var(--fail); }
+  .grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { fill: var(--text); font: 11px system-ui, sans-serif; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .8rem; color: var(--muted); margin-top: 6px; }
+  .legend svg { width: 26px; display: inline; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--line); }
+  .claims { display: grid; gap: 12px; }
+  .claim { background: var(--card); border: 1px solid var(--line); border-left: 6px solid; border-radius: 10px; padding: 12px 14px; }
+  .claim.pass { border-left-color: var(--pass); } .claim.fail { border-left-color: var(--fail); } .claim.not_proven { border-left-color: var(--np); }
+  .claim h3 { margin: 0; font-size: 1rem; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: .8rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; border: 1px solid; }
+  .tag.pass { color: var(--pass); background: var(--pass-bg); border-color: var(--pass); }
+  .tag.fail { color: var(--fail); background: var(--fail-bg); border-color: var(--fail); }
+  .tag.not_proven { color: var(--np); background: var(--np-bg); border-color: var(--np); }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 8px 0 0; font-size: .9rem; }
+  dt { color: var(--muted); } dd { margin: 0; }
+  .frames { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .frames figure { margin: 0; font-size: .75rem; color: var(--muted); }
+  .frames img { width: 112px; height: auto; border-radius: 6px; border: 1px solid var(--line); display: block; }
+  .request { border: 2px dashed var(--np); background: var(--np-bg); border-radius: 12px; padding: 12px 16px; margin: 12px 0; }
+  .request strong { color: var(--np); }
+  .ask { margin-top: 16px; }
+  .ask .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
+  .answer { border-left: 4px solid var(--path); padding: 6px 12px; background: var(--bg); border-radius: 6px; min-height: 2.5em; }
+  .answer .src { display: block; margin-top: 4px; }
+  .ask form { display: flex; gap: 6px; margin-top: 8px; } .ask input[type=text] { flex: 1; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; }
+  .error { color: var(--fail); }
+  .hl { stroke-width: 4 !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Virtual Safety Inspection</h1>
+  <div class="muted">Team Hallucinati. A phone clip becomes a verdict that an independent checker re-verifies. When a view is missing, the answer is "not proven".</div>
+  <div class="banner" id="banner">Loading…</div>
+
+  <nav class="bar" id="nav"></nav>
+
+  <div id="out"><p class="muted">Loading…</p></div>
+</main>
+<script type="module" src="live.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const out = document.getElementById("out"), nav = document.getElementById("nav"), banner = document.getElementById("banner");
+  const API = (q.get("api") || "").replace(/\/$/, "");
+  const LABEL = { blocked_exit: "Exit clear", door_clear_width: "Door clear width", distance_to_exit: "Distance to exit" };
+  const S = { evidence: null, report: null, plan: null, answers: null, base: null, clips: [] };
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const num = (v, unit) => v === null || v === undefined ? "none" : `${typeof v === "number" ? +v.toFixed(3) : v}${unit ? " " + unit : ""}`;
+  const verdictClass = v => v === "pass" ? "pass" : v === "fail" ? "fail" : "not_proven";
+  async function getJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.json(); }
+
+  // ---------- top-down plan ----------
+  function planSVG(plan, ev) {
+    const s = 100, M = 30, W = plan.room.w, D = plan.room.d;
+    const X = x => (M + x * s).toFixed(1), Y = y => (M + (D - y) * s).toFixed(1);
+    const claim = id => (ev.claims.find(c => c.id === id) || {}).verdict || "not_proven";
+    const colour = v => v === "pass" ? "var(--pass)" : v === "fail" ? "var(--fail)" : "var(--np)";
+    const exitV = claim("exit_1_clear"), doorV = claim("door_1_width");
+    let g = `<svg viewBox="0 0 ${M * 2 + W * s} ${M * 2 + D * s + 8}" role="img" aria-label="Top-down plan of the room">
+      <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--np)" stroke-width="2.5"/></pattern></defs>
+      <rect x="${M}" y="${M}" width="${W * s}" height="${D * s}" fill="var(--card)" stroke="var(--text)" stroke-width="2"/>`;
+    for (const [cx, cy] of plan.floor_cells_seen) g += `<rect x="${X(cx * 0.1)}" y="${Y(cy * 0.1 + 0.1)}" width="${0.1 * s}" height="${0.1 * s}" fill="var(--seen)"/>`;
+    for (const f of plan.furniture) g += `<rect x="${X(f.x0)}" y="${Y(f.y1)}" width="${(f.x1 - f.x0) * s}" height="${(f.y1 - f.y0) * s}" fill="var(--line)" stroke="var(--muted)" stroke-width=".8"/>`;
+    for (const o of plan.key_obstacles) g += `<rect x="${X(o.x0)}" y="${Y(o.y1)}" width="${(o.x1 - o.x0) * s}" height="${(o.y1 - o.y0) * s}" fill="var(--line)" stroke="var(--text)" stroke-width="1.6"/><text x="${X((o.x0 + o.x1) / 2)}" y="${Y((o.y0 + o.y1) / 2) - -4}" text-anchor="middle">${esc(o.label)}</text>`;
+    const c = plan.corridor;
+    g += `<rect class="zone" data-claim="exit_1_clear" x="${X(c.x0)}" y="${Y(c.y1)}" width="${(c.x1 - c.x0) * s}" height="${(c.y1 - c.y0) * s}" fill="${exitV === "not_proven" ? "url(#hatch)" : colour(exitV)}" fill-opacity="${exitV === "not_proven" ? .55 : .22}" stroke="${colour(exitV)}" stroke-width="2" stroke-dasharray="6 3"/>`;
+    g += `<text x="${X((c.x0 + c.x1) / 2)}" y="${Y(c.y1) - -14}" text-anchor="middle" font-weight="700" style="fill:${colour(exitV)}">exit corridor: ${esc(exitV.replace("_", " "))}</text>`;
+    g += `<line class="zone" data-claim="door_1_width" x1="${X(plan.door.x0)}" y1="${Y(0)}" x2="${X(plan.door.x1)}" y2="${Y(0)}" stroke="${colour(doorV)}" stroke-width="7"/><text x="${X((plan.door.x0 + plan.door.x1) / 2)}" y="${Y(0) - -18}" text-anchor="middle">exit door</text>`;
+    const pts = plan.camera_path.map(p => `${X(p[0])},${Y(p[1])}`).join(" ");
+    g += `<polyline points="${pts}" fill="none" stroke="var(--path)" stroke-width="1.6" stroke-dasharray="3 3"/>`;
+    const first = plan.camera_path[0], last = plan.camera_path[plan.camera_path.length - 1];
+    g += `<circle cx="${X(first[0])}" cy="${Y(first[1])}" r="4.5" fill="var(--pass)"/><circle cx="${X(last[0])}" cy="${Y(last[1])}" r="4.5" fill="var(--path)"/>`;
+    for (const [id, p] of Object.entries(plan.markers)) g += `<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.5" fill="var(--text)"/><text x="${X(p[0])}" y="${Y(p[1]) - 6}" text-anchor="middle" font-size="9">${esc(id)}</text>`;
+    g += `</svg><div class="legend"><span><i style="background:var(--seen)"></i>floor the camera saw</span><span><svg width="26" height="8" style="display:inline"><line x1="0" y1="4" x2="26" y2="4" stroke="var(--path)" stroke-width="2" stroke-dasharray="3 3"/></svg> camera path (green start, blue end)</span><span><i style="background:var(--pass)"></i>pass</span><span><i style="background:var(--fail)"></i>fail</span><span><i style="background:var(--np)"></i>not proven</span><span>dots: marker ids</span></div>`;
+    return g;
+  }
+
+  // ---------- page ----------
+  function render() {
+    const ev = S.evidence;
+    if (!ev) { out.innerHTML = '<p class="muted">Pick an evidence.json to show.</p>'; return; }
+    const checks = {};
+    (S.report?.claims || []).forEach(c => { checks[c.claim_id] = c; });
+    let html = `<p class="muted">Room <b>${esc(ev.room_id)}</b> · schema ${esc(ev.schema_version)} · ${Math.round(ev.coverage.seen_fraction * 100)}% of the floor seen</p>`;
+    if (S.report) {
+      const ok = S.report.overall === "PASS";
+      html += `<section class="checker ${ok ? "pass" : "fail"}" aria-label="Independent checker result"><div class="big">${ok ? "PASS" : "FAIL"}</div>
+        <div>Independent checker ${ok ? "agrees with every claim" : "disagrees with at least one claim"}.<br>
+        <span class="muted">PASS means the claims were recomputed from the geometry and match, not that the room is safe. Rule parameters are placeholders until decision D8.</span></div></section>`;
+    } else html += `<p class="muted">No checker_report.json loaded.</p>`;
+    if (ev.requested_view) html += `<section class="request"><strong>Not proven, one more view needed:</strong> ${esc(ev.requested_view.description)}</section>`;
+    html += `<div class="grid">`;
+    html += S.plan ? `<section class="panel"><h2>Top-down plan</h2>${planSVG(S.plan, ev)}</section>` : "";
+    html += `<section class="claims">`;
+    for (const c of ev.claims) {
+      const chk = checks[c.id];
+      const frames = c.frame_ids.map(id => S.base ? `<figure><a href="${S.base}/frames/f${id}.jpg" target="_blank" rel="noopener"><img loading="lazy" alt="Frame ${id}" src="${S.base}/frames/f${id}.jpg"></a><figcaption>frame ${id}${S.plan?.frame_times?.[id] !== undefined ? ` · ${S.plan.frame_times[id]} s` : ""}</figcaption></figure>` : "").join("");
+      html += `<article class="claim ${verdictClass(c.verdict)}" data-claim="${esc(c.id)}">
+        <h3><span>${esc(LABEL[c.type] || c.type)} <span class="muted">(${esc(c.id)})</span></span><span class="tag ${verdictClass(c.verdict)}">${esc(c.verdict.replace("_", " "))}</span></h3>
+        <dl><dt>Value</dt><dd>${esc(num(c.value, c.unit))}${c.type === "blocked_exit" && c.verdict === "pass" ? ' <span class="muted">(distance checked, nothing found within it)</span>' : ""}</dd>
+          <dt>Frames</dt><dd>${c.frame_ids.length ? esc(c.frame_ids.join(", ")) : "none: nothing in the clip shows this"}</dd>
+          ${chk ? `<dt>Checker</dt><dd><span class="tag ${chk.result === "PASS" ? "pass" : "fail"}">${esc(chk.result)}</span> recomputed ${esc(num(chk.recomputed_value, chk.unit))}${chk.reason ? ". " + esc(chk.reason) : ""}</dd>` : ""}</dl>
+        ${frames ? `<div class="frames">${frames}</div>` : ""}</article>`;
+    }
+    html += `</section></div>`;
+    html += `<section class="panel ask"><h2>Ask about this room <span class="muted">(Google adapter: the answer is copied from the evidence; Gemini may only reword it)</span></h2><div class="chips" id="chips"></div><div class="answer" id="answer" aria-live="polite">${S.answers || API ? "Pick a question." : "No answers file for this clip."}</div>
+      <div id="livebox"></div>
+      ${API ? `<form id="askform"><input type="text" id="askq" placeholder="Ask the live service…" aria-label="Question"><button class="chip" type="submit">Ask</button></form>` : ""}</section>`;
+    out.innerHTML = html;
+    wire();
+    mountLive();
+  }
+
+  function mountLive() {
+    const box = document.getElementById("livebox");
+    if (!window.VS_LIVE || !box || box.firstChild || !S.evidence) return;
+    box.innerHTML = `<form id="liveform"><input type="text" id="liveq" placeholder="Ask a question about this room…" aria-label="Question"><button class="chip" type="submit">Ask</button></form>`;
+    document.getElementById("liveform").onsubmit = async e => {
+      e.preventDefault();
+      const question = document.getElementById("liveq").value.trim(); if (!question) return;
+      document.getElementById("answer").textContent = "Asking…";
+      try { showAnswer(await window.VS_LIVE.answer(S.evidence, question)); }
+      catch (err) { document.getElementById("answer").innerHTML = `<span class="error">Could not answer: ${esc(err.message)}</span>`; }
+    };
+  }
+  window.addEventListener("vs-live", mountLive);
+
+  function showAnswer(a) {
+    const el = document.getElementById("answer");
+    const src = a.source === "model_rewording" ? "Reworded by Gemini; the guard checked it keeps every verdict, number and the requested view."
+      : "Copied from the evidence file." + (a.explanation_discarded ? ` A Gemini rewording was discarded (${a.explanation_discarded}).` : "");
+    el.innerHTML = `<div>${esc(a.answer)}</div><span class="muted src">${esc(src)}</span>`;
+  }
+
+  function wire() {
+    const chips = document.getElementById("chips");
+    (S.answers || []).forEach((a, i) => {
+      const b = document.createElement("button"); b.className = "chip"; b.textContent = a.question; b.setAttribute("aria-pressed", "false");
+      b.onclick = () => { chips.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); showAnswer(a); };
+      chips.appendChild(b);
+    });
+    const form = document.getElementById("askform");
+    if (form) form.onsubmit = async e => {
+      e.preventDefault();
+      const question = document.getElementById("askq").value.trim(); if (!question) return;
+      try {
+        const r = await fetch(`${API}/ask`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, clip: S.clipId }) });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        showAnswer(await r.json());
+      } catch (err) { document.getElementById("answer").innerHTML = `<span class="error">Could not reach the live service: ${esc(err.message)}</span>`; }
+    };
+    out.querySelectorAll(".claim").forEach(card => {
+      const on = v => out.querySelectorAll(`.zone[data-claim="${card.dataset.claim}"]`).forEach(z => z.classList.toggle("hl", v));
+      card.addEventListener("mouseenter", () => on(true)); card.addEventListener("mouseleave", () => on(false));
+    });
+  }
+
+  function fail(msg) { out.innerHTML = `<p class="error">${esc(msg)}</p>`; }
+
+  async function loadClip(id) {
+    S.base = `demo/${id}`; S.clipId = id;
+    try {
+      const [evidence, report, plan] = await Promise.all([getJSON(`${S.base}/evidence.json`), getJSON(`${S.base}/checker_report.json`), getJSON(`${S.base}/plan.json`)]);
+      S.evidence = evidence; S.report = report; S.plan = plan;
+      S.answers = await getJSON(`${S.base}/answers.json`).catch(() => null);
+      render();
+    } catch (e) { fail(fileHint(`Could not load ${id}: ${e.message}`)); }
+  }
+  async function loadSample(name) {
+    S.base = null; S.plan = null; S.answers = null; S.clipId = null;
+    try {
+      [S.evidence, S.report] = await Promise.all([getJSON(`../samples/${name}.json`), getJSON(`../samples/${name}.checker_report.json`)]);
+      render();
+    } catch (e) { fail(fileHint(`Could not load the ${name} sample: ${e.message}`)); }
+  }
+  const fileHint = m => location.protocol === "file:" ? "Opened as a file, so the browser will not read other files by itself. Run python3 -m http.server in the repo root and open http://localhost:8000/viewer/, or use the Open buttons to pick evidence.json and checker_report.json." : m;
+
+  function pick(input, set) {
+    input.addEventListener("change", async () => {
+      const f = input.files[0]; if (!f) return;
+      try { set(JSON.parse(await f.text())); S.plan = null; S.answers = null; S.base = null; render(); } catch (e) { fail(`${f.name} is not valid JSON: ${e.message}`); }
+    });
+  }
+
+  async function init() {
+    let index = null;
+    try { index = await getJSON("demo/index.json"); } catch (e) { /* demo data not built: only samples and files */ }
+    banner.textContent = index ? index.provenance : "Day-3 sample files: every number in them is made up.";
+    let html = "";
+    if (index) {
+      S.clips = index.clips;
+      html += index.clips.map(c => `<a href="?clip=${esc(c.id)}" data-clip="${esc(c.id)}">${esc(c.title)}</a>`).join("");
+    }
+    html += `<a href="?sample=pass" data-sample="pass">Hand-made pass</a><a href="?sample=fail" data-sample="fail">Hand-made fail</a>
+      <label>Open evidence.json <input type="file" id="pick-evidence" accept=".json"></label><label>Open checker_report.json <input type="file" id="pick-report" accept=".json"></label>`;
+    nav.innerHTML = html;
+    pick(document.getElementById("pick-evidence"), v => { S.evidence = v; });
+    pick(document.getElementById("pick-report"), v => { S.report = v; });
+    const sample = q.get("sample");
+    if (sample === "pass" || sample === "fail") {
+      nav.querySelector(`[data-sample="${sample}"]`).setAttribute("aria-current", "page");
+      return loadSample(sample);
+    }
+    if (!index) return loadSample("pass");
+    const clip = index.clips.find(c => c.id === q.get("clip")) || index.clips[0];
+    nav.querySelector(`[data-clip="${clip.id}"]`).setAttribute("aria-current", "page");
+    return loadClip(clip.id);
+  }
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "virtual-safety/capture.schema.json",
+  "title": "capture.json v0.1",
+  "description": "Sits next to clip.mp4. Format owned by Shriya; filled in by whoever films (Nadeem in T2). Read by reconstruction (Kaushal).",
+  "type": "object",
+  "required": ["schema_version", "room_id", "clip", "marker_id", "marker_size_m"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "room_id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "clip": {"type": "string", "description": "File name of the clip, for example clip1_clear.mp4. Clips are not stored in git."},
+    "marker_id": {"type": "integer", "minimum": 0, "description": "The scale marker (D7)."},
+    "marker_size_m": {"type": "number", "minimum": 0, "description": "Printed marker side length in metres, measured with a ruler."},
+    "recorded_on": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+  }
+}

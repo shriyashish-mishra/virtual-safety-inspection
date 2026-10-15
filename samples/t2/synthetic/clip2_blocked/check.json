@@ -1,0 +1,21 @@
+{
+ "frames_read": 630,
+ "frames_tested": 126,
+ "detection_rate_by_marker": {
+  "0": 0.254,
+  "1": 0.31,
+  "2": 0.373,
+  "3": 0.413
+ },
+ "marker_distance_relative_error": {
+  "median": 0.0264,
+  "p95": 0.0438,
+  "samples": 170
+ },
+ "door_marker_pair": {
+  "frames_with_both": 46,
+  "true_centre_distance_m": 1.215,
+  "abs_error_m_median": 0.0417,
+  "abs_error_m_p95": 0.0598
+ }
+}

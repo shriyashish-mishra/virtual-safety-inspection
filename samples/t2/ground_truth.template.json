@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "units": "m",
+  "room_id": null,
+  "clips": [
+    {
+      "clip": "clip1_clear.mp4",
+      "door_clear_width_m": null,
+      "exit_clearance_m": null,
+      "expected_verdict": null,
+      "unseen_area": null
+    },
+    {
+      "clip": "clip2_blocked.mp4",
+      "door_clear_width_m": null,
+      "exit_clearance_m": null,
+      "expected_verdict": null,
+      "unseen_area": null
+    },
+    {
+      "clip": "clip3_unseen.mp4",
+      "door_clear_width_m": null,
+      "exit_clearance_m": null,
+      "expected_verdict": null,
+      "unseen_area": null
+    }
+  ]
+}

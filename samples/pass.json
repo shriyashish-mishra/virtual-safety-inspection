@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.1",
+  "room_id": "sample_room",
+  "claims": [
+    {"id": "exit_1_clear", "type": "blocked_exit", "verdict": "pass", "value": 1.2, "unit": "m", "confidence": 0.9, "frame_ids": [12, 13, 14]},
+    {"id": "door_1_width", "type": "door_clear_width", "verdict": "pass", "value": 0.9, "unit": "m", "confidence": 0.85, "frame_ids": [30, 31]}
+  ],
+  "coverage": {"seen_fraction": 1.0, "unseen_regions": []},
+  "requested_view": null
+}

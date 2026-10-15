@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1",
+  "room_id": "sample_room",
+  "overall": "PASS",
+  "claims": [
+    {"claim_id": "exit_1_clear", "reported_verdict": "pass", "reported_value": 1.2, "recomputed_value": 1.2, "tolerance": null, "unit": "m", "result": "PASS"},
+    {"claim_id": "door_1_width", "reported_verdict": "pass", "reported_value": 0.9, "recomputed_value": 0.9, "tolerance": null, "unit": "m", "result": "PASS"}
+  ]
+}

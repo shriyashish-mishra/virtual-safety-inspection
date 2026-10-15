@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "virtual-safety/geometry.schema.json",
+  "title": "geometry.json v0.1",
+  "description": "Written by reconstruction (Kaushal). Read by the rules and the checker. All lengths in metres, one right-handed world frame.",
+  "type": "object",
+  "required": ["schema_version", "room_id", "units", "scale_source", "frame_index", "camera_poses", "marker_poses", "points_ref", "openings"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "room_id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "units": {"const": "m"},
+    "scale_source": {
+      "type": "object",
+      "required": ["method", "marker_id", "marker_size_m"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {"enum": ["aruco_marker", "photo_measurement", "none"]},
+        "marker_id": {"type": ["integer", "null"], "minimum": 0},
+        "marker_size_m": {"type": ["number", "null"], "minimum": 0}
+      }
+    },
+    "frame_index": {
+      "description": "One entry per frame used. frame_id is what evidence.json frame_ids point to.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["frame_id", "t_seconds"],
+        "additionalProperties": false,
+        "properties": {
+          "frame_id": {"type": "integer", "minimum": 0},
+          "t_seconds": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "camera_poses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["frame_id", "pose"],
+        "additionalProperties": false,
+        "properties": {
+          "frame_id": {"type": "integer", "minimum": 0},
+          "pose": {"$ref": "#/$defs/pose"}
+        }
+      }
+    },
+    "marker_poses": {
+      "description": "Marker id (as a string key) to pose. Ids reserved for the exit and door edges are set by D11.",
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/pose"}
+    },
+    "points_ref": {
+      "type": "object",
+      "required": ["kind", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["point_cloud", "occupancy_grid"]},
+        "path": {"type": "string", "description": "Relative path to the coarse cloud or grid file, in metres."}
+      }
+    },
+    "openings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "marker_ids", "points"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"},
+          "kind": {"enum": ["door", "exit"]},
+          "marker_ids": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}},
+          "points": {
+            "description": "door: the two edge points; exit: one centre point.",
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2,
+            "items": {"$ref": "#/$defs/vec3"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "vec3": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "number"}},
+    "pose": {
+      "type": "object",
+      "required": ["position", "rotation_wxyz"],
+      "additionalProperties": false,
+      "properties": {
+        "position": {"$ref": "#/$defs/vec3"},
+        "rotation_wxyz": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}
+      }
+    }
+  }
+}

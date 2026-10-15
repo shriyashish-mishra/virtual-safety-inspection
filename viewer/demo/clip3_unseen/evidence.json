@@ -1,0 +1,43 @@
+{
+ "schema_version": "0.1",
+ "room_id": "synthetic-room",
+ "claims": [
+  {
+   "id": "exit_1_clear",
+   "type": "blocked_exit",
+   "verdict": "not_proven",
+   "value": null,
+   "unit": null,
+   "confidence": 0.0,
+   "frame_ids": []
+  },
+  {
+   "id": "door_1_width",
+   "type": "door_clear_width",
+   "verdict": "pass",
+   "value": 0.86,
+   "unit": "m",
+   "confidence": 0.85,
+   "frame_ids": [
+    0,
+    18,
+    107
+   ]
+  }
+ ],
+ "coverage": {
+  "seen_fraction": 0.01,
+  "unseen_regions": [
+   {
+    "id": "exit_1_floor",
+    "description": "Floor in front of exit_1 never in view"
+   }
+  ]
+ },
+ "requested_view": {
+  "claim_ids": [
+   "exit_1_clear"
+  ],
+  "description": "Film the floor in front of exit_1 from about 2 m away, with the exit marker in frame"
+ }
+}

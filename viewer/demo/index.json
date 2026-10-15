@@ -1,0 +1,29 @@
+{
+ "provenance": "ILLUSTRATIVE synthetic room rendered by tools/synthetic_room; evidence built from the scene truth; rules v0 (rules/run.py) gives the same verdicts and values on this geometry (checkpoint of 14 Oct); parameters are placeholders until D8",
+ "clips": [
+  {
+   "id": "clip1_clear",
+   "title": "Clear exit",
+   "expected_verdict": "pass",
+   "door_clear_width_m": 0.86,
+   "exit_clearance_m": 2.2,
+   "unseen_area": null
+  },
+  {
+   "id": "clip2_blocked",
+   "title": "Blocked exit",
+   "expected_verdict": "fail",
+   "door_clear_width_m": 0.86,
+   "exit_clearance_m": 0.7,
+   "unseen_area": null
+  },
+  {
+   "id": "clip3_unseen",
+   "title": "Exit never filmed",
+   "expected_verdict": "not_proven",
+   "door_clear_width_m": 0.86,
+   "exit_clearance_m": 2.2,
+   "unseen_area": "floor corridor in front of the exit: x 3.10..4.30 m, y 0.00..1.50 m"
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "room_id": "handmade",
+  "units": "m",
+  "scale_source": {"method": "aruco_marker", "marker_id": 0, "marker_size_m": 0.15},
+  "frame_index": [
+    {"frame_id": 0, "t_seconds": 0.0},
+    {"frame_id": 1, "t_seconds": 0.5},
+    {"frame_id": 2, "t_seconds": 1.0},
+    {"frame_id": 3, "t_seconds": 1.5},
+    {"frame_id": 4, "t_seconds": 2.0},
+    {"frame_id": 5, "t_seconds": 2.5}
+  ],
+  "camera_poses": [
+    {"frame_id": 0, "pose": {"position": [0.0, 2.5, 1.5], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}},
+    {"frame_id": 1, "pose": {"position": [0.0, 2.2, 1.5], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}},
+    {"frame_id": 2, "pose": {"position": [0.3, 2.0, 1.5], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}},
+    {"frame_id": 3, "pose": {"position": [1.5, 2.0, 1.5], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}},
+    {"frame_id": 4, "pose": {"position": [1.8, 2.0, 1.5], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}},
+    {"frame_id": 5, "pose": {"position": [1.0, 3.0, 1.5], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}}
+  ],
+  "marker_poses": {
+    "0": {"position": [1.0, 0.0, 1.0], "rotation_wxyz": [0.7071067811865476, -0.7071067811865476, 0.0, 0.0]},
+    "1": {"position": [0.6, 0.0, 1.2], "rotation_wxyz": [0.7071067811865476, -0.7071067811865476, 0.0, 0.0]},
+    "2": {"position": [3.0, 1.6, 1.0], "rotation_wxyz": [0.7071067811865476, 0.0, -0.7071067811865476, 0.0]},
+    "3": {"position": [3.0, 2.5, 1.0], "rotation_wxyz": [0.7071067811865476, 0.0, -0.7071067811865476, 0.0]},
+    "4": {"position": [-2.0, 3.6, 1.2], "rotation_wxyz": [0.7071067811865476, 0.0, 0.7071067811865476, 0.0]}
+  },
+  "points_ref": {"kind": "point_cloud", "path": "points.json"},
+  "openings": [
+    {"id": "exit_1", "kind": "exit", "marker_ids": [1], "points": [[0.0, 0.0, 1.0]]},
+    {"id": "door_1", "kind": "door", "marker_ids": [2, 3], "points": [[3.0, 1.6, 1.0], [3.0, 2.5, 1.0]]},
+    {"id": "exit_2", "kind": "exit", "marker_ids": [4], "points": [[-2.0, 3.0, 1.0]]}
+  ]
+}

@@ -1,0 +1,61 @@
+{
+ "ILLUSTRATIVE": "synthetic render, not a real room; do not use as T2 ground truth",
+ "clip": "clip3_unseen.mp4",
+ "resolution": [
+  1280,
+  720
+ ],
+ "fps": 30,
+ "frames": 540,
+ "camera": {
+  "K": [
+   [
+    985.5135768413331,
+    0.0,
+    640.0
+   ],
+   [
+    0.0,
+    985.5135768413331,
+    360.0
+   ],
+   [
+    0.0,
+    0.0,
+    1.0
+   ]
+  ],
+  "distortion_k1_k2_p1_p2_k3": [
+   -0.045,
+   0.01,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hfov_deg": 66.0,
+  "pose_convention": "camera-to-world, OpenCV axes (x right, y down, z forward)"
+ },
+ "truth": {
+  "door_clear_width_m": 0.86,
+  "exit_clearance_m": 2.2,
+  "exit_clearance_note": "distance from the exit threshold (y=0) to the nearest obstacle in line with the exit",
+  "expected_verdict": "not_proven",
+  "unseen_area": "floor corridor in front of the exit: x 3.10..4.30 m, y 0.00..1.50 m"
+ },
+ "marker_layout": {
+  "dictionary": "DICT_4X4_50 (UNVERIFIED)",
+  "printed_black_side_m": 0.15,
+  "ids": {
+   "0": "scale (left of the door, upper)",
+   "1": "exit, on the door leaf",
+   "2": "left door edge (beside the architrave)",
+   "3": "right door edge (beside the architrave)"
+  },
+  "door_edge_offset_note": "markers 2 and 3 sit beside the architrave; their centres are 0.177 m from the clear-opening edge"
+ },
+ "check": {
+  "corridor_floor_pixels_seen": 0,
+  "corridor_floor_fraction_seen": 0.0
+ },
+ "render_seconds": 1785.4
+}

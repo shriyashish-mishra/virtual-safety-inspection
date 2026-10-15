@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "room_id": "synthetic-room",
+  "overall": "PASS",
+  "claims": [
+    {
+      "claim_id": "exit_1_clear",
+      "reported_verdict": "pass",
+      "reported_value": 1.0,
+      "recomputed_value": 1.0,
+      "tolerance": 0.01,
+      "unit": "m",
+      "result": "PASS"
+    },
+    {
+      "claim_id": "door_1_width",
+      "reported_verdict": "pass",
+      "reported_value": 0.86,
+      "recomputed_value": 0.8599999999999999,
+      "tolerance": 0.01,
+      "unit": "m",
+      "result": "PASS"
+    }
+  ]
+}

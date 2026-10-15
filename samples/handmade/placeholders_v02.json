@@ -1,0 +1,14 @@
+{
+  "_note": "PLACEHOLDER values, made up and not measured; not proposals. D8 sets the real numbers. The first six are the same as placeholders.json. The last three are spec v0.2 (PROPOSED, docs/rules-spec.md section 4): the margin comes from where the door-leaf points sit on the reconstructed clips (within 0.1 m of the exit plane), the seen fraction from the corridor floor cover on three reconstructed clips (0.52, 0.16 with a box in the way, 0.09 unseen). The last two (spec v0.3) come from the reconstructed floor-marker clips: the box face shows up as slices of 17 or more points per 0.05 m, the noise as slices of 9 or fewer. Six clips of one room are thin evidence.",
+  "MIN_EXIT_CLEARANCE_M": 1.0,
+  "CORRIDOR_HALF_WIDTH_M": 0.5,
+  "FLOOR_BAND_M": 0.05,
+  "OBSTACLE_MAX_Z_M": 2.0,
+  "MIN_FLOOR_POINTS": 3,
+  "MIN_DOOR_CLEAR_WIDTH_M": 0.8,
+  "EXIT_PLANE_MARGIN_M": 0.15,
+  "MIN_CORRIDOR_SEEN_FRACTION": 0.3,
+  "CORRIDOR_CELL_M": 0.1,
+  "OBSTACLE_SLICE_M": 0.05,
+  "MIN_OBSTACLE_SLICE_POINTS": 12
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.1",
+  "room_id": "sample_room",
+  "claims": [
+    {"id": "exit_1_clear", "type": "blocked_exit", "verdict": "fail", "value": 0.3, "unit": "m", "confidence": 0.9, "frame_ids": [12, 13, 14]},
+    {"id": "door_1_width", "type": "door_clear_width", "verdict": "not_proven", "value": null, "unit": null, "confidence": 0.0, "frame_ids": []}
+  ],
+  "coverage": {"seen_fraction": 0.7, "unseen_regions": [{"id": "door_1_right_edge", "description": "Right edge of door 1 never in view"}]},
+  "requested_view": {"claim_ids": ["door_1_width"], "description": "Film door 1 straight on from about 2 m away so both edges and the marker are in frame"}
+}

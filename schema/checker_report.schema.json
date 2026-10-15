@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "virtual-safety/checker_report.schema.json",
+  "title": "checker_report.json v0.1",
+  "description": "Written by the checker (Shriya, T34). Read by the viewer and the tracker. overall is PASS only if every claim's result is PASS.",
+  "type": "object",
+  "required": ["schema_version", "room_id", "overall", "claims"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "room_id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "overall": {"enum": ["PASS", "FAIL"]},
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "reported_verdict", "reported_value", "recomputed_value", "tolerance", "unit", "result"],
+        "additionalProperties": false,
+        "properties": {
+          "claim_id": {"type": "string"},
+          "reported_verdict": {"enum": ["pass", "fail", "not_proven"]},
+          "reported_value": {"type": ["number", "null"]},
+          "recomputed_value": {"type": ["number", "null"]},
+          "tolerance": {
+            "description": "Allowed difference in unit. null until D8 sets tolerances.",
+            "type": ["number", "null"],
+            "minimum": 0
+          },
+          "unit": {"enum": ["m", null]},
+          "result": {"enum": ["PASS", "FAIL"]},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

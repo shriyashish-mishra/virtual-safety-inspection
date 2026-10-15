@@ -1,0 +1,37 @@
+{
+ "schema_version": "0.1",
+ "room_id": "synthetic-room",
+ "claims": [
+  {
+   "id": "exit_1_clear",
+   "type": "blocked_exit",
+   "verdict": "fail",
+   "value": 0.7,
+   "unit": "m",
+   "confidence": 0.9,
+   "frame_ids": [
+    106,
+    112,
+    117
+   ]
+  },
+  {
+   "id": "door_1_width",
+   "type": "door_clear_width",
+   "verdict": "pass",
+   "value": 0.86,
+   "unit": "m",
+   "confidence": 0.85,
+   "frame_ids": [
+    0,
+    102,
+    125
+   ]
+  }
+ ],
+ "coverage": {
+  "seen_fraction": 0.1,
+  "unseen_regions": []
+ },
+ "requested_view": null
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "units": "m",
+  "room_id": "synthetic-room",
+  "provenance": "ILLUSTRATIVE synthetic scene dimensions; not real T2 capture or tape measurements",
+  "complete_clip_set": true,
+  "clips": [
+    {
+      "clip": "clip1_clear.mp4",
+      "door_clear_width_m": 0.86,
+      "exit_clearance_m": 2.2,
+      "exit_clearance_note": "distance from the exit threshold (y=0) to the nearest obstacle in line with the exit",
+      "expected_verdict": "pass",
+      "unseen_area": null
+    },
+    {
+      "clip": "clip2_blocked.mp4",
+      "door_clear_width_m": 0.86,
+      "exit_clearance_m": 0.7,
+      "exit_clearance_note": "distance from the exit threshold (y=0) to the nearest obstacle in line with the exit",
+      "expected_verdict": "fail",
+      "unseen_area": null
+    },
+    {
+      "clip": "clip3_unseen.mp4",
+      "door_clear_width_m": 0.86,
+      "exit_clearance_m": 2.2,
+      "exit_clearance_note": "distance from the exit threshold (y=0) to the nearest obstacle in line with the exit",
+      "expected_verdict": "not_proven",
+      "unseen_area": "floor corridor in front of the exit: x 3.10..4.30 m, y 0.00..1.50 m"
+    }
+  ],
+  "missing_clips": [],
+  "real_capture_complete": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "room_id": "sample_room",
+  "units": "m",
+  "scale_source": {"method": "aruco_marker", "marker_id": 0, "marker_size_m": 0.15},
+  "frame_index": [
+    {"frame_id": 12, "t_seconds": 0.4},
+    {"frame_id": 30, "t_seconds": 1.0}
+  ],
+  "camera_poses": [
+    {"frame_id": 12, "pose": {"position": [0.0, 1.5, 0.0], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}},
+    {"frame_id": 30, "pose": {"position": [0.5, 1.5, 0.2], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}}
+  ],
+  "marker_poses": {
+    "0": {"position": [1.0, 1.0, 3.0], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    "1": {"position": [2.0, 1.0, 3.0], "rotation_wxyz": [1.0, 0.0, 0.0, 0.0]}
+  },
+  "points_ref": {"kind": "point_cloud", "path": "points.ply"},
+  "openings": [
+    {"id": "exit_1", "kind": "exit", "marker_ids": [1], "points": [[2.0, 1.0, 3.0]]}
+  ]
+}

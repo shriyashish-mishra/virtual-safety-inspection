@@ -1,0 +1,9 @@
+{
+  "_note": "PLACEHOLDER values for the hand-made test pairs only. Made up, not measured, not proposals. D8 sets the real numbers; docs/rules-spec.md keeps them blank. TOLERANCE is not here: it lives in checker/config.py (T34).",
+  "MIN_EXIT_CLEARANCE_M": 1.0,
+  "CORRIDOR_HALF_WIDTH_M": 0.5,
+  "FLOOR_BAND_M": 0.05,
+  "OBSTACLE_MAX_Z_M": 2.0,
+  "MIN_FLOOR_POINTS": 3,
+  "MIN_DOOR_CLEAR_WIDTH_M": 0.8
+}

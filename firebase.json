@@ -1,0 +1,9 @@
+{
+  "hosting": {
+    "public": "hosting-dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      { "source": "**/*.json", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "virtual-safety/evidence.schema.json",
+  "title": "evidence.json v0.1",
+  "description": "Written by the rules (Nadeem). Read by the viewer and the checker. Every claim has exactly one verdict: pass, fail or not_proven.",
+  "type": "object",
+  "required": ["schema_version", "room_id", "claims", "coverage", "requested_view"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "room_id": {"type": "string", "pattern": "^[a-z0-9_-]+$"},
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/claim"}
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["seen_fraction", "unseen_regions"],
+      "additionalProperties": false,
+      "properties": {
+        "seen_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "unseen_regions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string"},
+              "description": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "requested_view": {
+      "description": "null when every claim has a pass or fail verdict; otherwise the exact view that would let a not_proven claim be decided.",
+      "type": ["object", "null"],
+      "required": ["claim_ids", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "claim_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "description": {"type": "string"}
+      }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": ["id", "type", "verdict", "value", "unit", "confidence", "frame_ids"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"enum": ["blocked_exit", "door_clear_width", "distance_to_exit"]},
+        "verdict": {"enum": ["pass", "fail", "not_proven"]},
+        "value": {
+          "description": "The measured number the verdict rests on (blocked_exit: clear distance in front of the exit; door_clear_width: clear width). null when not_proven.",
+          "type": ["number", "null"]
+        },
+        "unit": {"enum": ["m", null]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "frame_ids": {
+          "description": "Entries of geometry.json frame_index that show this claim.",
+          "type": "array",
+          "items": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

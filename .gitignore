@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+hosting-dist/
+.firebase/
+firebase-debug.log
+firebase-config.json
+.env
+*.mp4
+*.mov
+*.zip
