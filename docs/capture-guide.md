@@ -30,7 +30,7 @@ Per room, tape-measure the door clear width and the exit clearance (metres) and 
 
 ## capture.json (one per clip, format from T1, VERIFIED on PR #5)
 
-See schema/examples/capture.json on branch shriya/T1-evidence-schema until PR #5 merges:
+See schema/examples/capture.json:
 
     {
       "schema_version": "0.1",

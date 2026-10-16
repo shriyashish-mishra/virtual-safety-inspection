@@ -4,7 +4,7 @@
 
 Written by Nadeem (T4). The rules (rules/, Nadeem: T8, T9, T10) and the checker (checker/, Shriyashish Mishra: T34) are both written from this text and from nothing else (D10). If the two disagree, this spec is wrong and is fixed first. It describes formulas in words; it depends on no code in rules/.
 
-Field names come from the draft schema v0.1 on branch `shriya/T1-evidence-schema` (not yet approved). If T1 changes a field, this spec follows it.
+Field names come from schema v0.1 (see schema/). If T1 changes a field, this spec follows it.
 
 ## 1. Inputs
 - `geometry.json` (schema v0.1) and the point file named by its `points_ref.path`, resolved relative to the folder holding `geometry.json`. The point file is part of the geometry: without it no obstacle can be found. "The checker reads only geometry.json and evidence.json" (docs/interfaces.md) is read here as "geometry.json, its point file, and evidence.json".

@@ -23,4 +23,4 @@ Two geometry and evidence pairs, made by hand from docs/rules-spec.md, so the ch
 
 The door width computes to 0.8999999999999999 in floating point, so the checker's `TOLERANCE` placeholder must be above zero. Doubling a value breaks any tolerance below 0.9 m.
 
-Validated against the draft schema on `shriya/T1-evidence-schema`: `python3 schema/validate.py geometry|evidence <file>` gives `ok` for all four files.
+Validated against schema v0.1 (schema/): `python3 schema/validate.py geometry|evidence <file>` gives `ok` for all four files.
