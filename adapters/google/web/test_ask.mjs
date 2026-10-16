@@ -23,4 +23,12 @@ r = await answer(ev, "How wide is the door?", async () => "The door is wide enou
 assert.equal(r.source, "evidence_template");
 r = await answer(ev, "How wide is the door?", async () => { throw new Error("offline"); });
 assert.equal(r.source, "evidence_template"); assert.match(r.explanation_discarded, /failed/);
+// a model that never answers: the template answer comes back after the timeout instead of hanging
+const t0 = Date.now();
+r = await answer(ev, "How wide is the door?", () => new Promise(() => {}), { timeoutMs: 80 });
+assert.equal(r.source, "evidence_template"); assert.match(r.explanation_discarded, /TimeoutError/);
+assert.ok(Date.now() - t0 < 2000, "should not hang");
+// a slow but valid answer inside the timeout is still used
+r = await answer(ev, "Is exit_2 clear?", () => new Promise(res => setTimeout(() => res("Exit 2 is not proven; please film the floor in front of exit_2 from about 2 m away with the exit marker in frame."), 20)), { timeoutMs: 500 });
+assert.equal(r.source, "model_rewording");
 console.log("ok");

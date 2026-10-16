@@ -49,8 +49,16 @@ export function guard(rewrite, template, claims) {
   return null;
 }
 
-// rewrite: optional async (templateText) => reworded text. Any failure leaves the template answer standing.
-export async function answer(evidence, question, rewrite) {
+// A model that never answers must not leave the page on "Asking..." (the free tier stalls and returns 503 at times).
+export const REWRITE_TIMEOUT_MS = 7000;
+function withTimeout(promise, ms) {
+  let timer;
+  const stop = new Promise((_, reject) => { timer = setTimeout(() => { const e = new Error("no answer in " + ms + " ms"); e.name = "TimeoutError"; reject(e); }, ms); });
+  return Promise.race([promise, stop]).finally(() => clearTimeout(timer));
+}
+
+// rewrite: optional async (templateText) => reworded text. Any failure, including a timeout, leaves the template answer standing.
+export async function answer(evidence, question, rewrite, { timeoutMs = REWRITE_TIMEOUT_MS } = {}) {
   const claims = pickClaims(evidence, question);
   const template = claims.map(c => describe(c, evidence)).join(" ");
   const out = {
@@ -60,7 +68,7 @@ export async function answer(evidence, question, rewrite) {
   };
   if (rewrite) {
     try {
-      const text = await rewrite(template);
+      const text = await withTimeout(Promise.resolve().then(() => rewrite(template)), timeoutMs);
       const problem = guard(text, template, claims);
       if (problem === null) { out.answer = text; out.source = "model_rewording"; } else out.explanation_discarded = problem;
     } catch (e) {
