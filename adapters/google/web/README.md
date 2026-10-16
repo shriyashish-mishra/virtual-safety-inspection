@@ -22,7 +22,7 @@ built from the evidence, so the page still works offline. The verdict never come
 - Then redeploy (`python3 scripts/build_hosting.py`, `npx firebase-tools deploy --only hosting --project virtual-safety-hallucinati`) and test one question on the live URL; that is T16's done-when.
 
 ## UNVERIFIED
-- That the Cup accepts static hosting plus client-side Gemini as "deployed" (D16 option C: Shriya asks Hack2skill).
+- That the Cup accepts static hosting plus client-side Gemini as "deployed" (D16 option C: Shriyashish Mishra asks Hack2skill).
 - That AI Logic works on Spark without a billing step (Firebase's FAQ says yes, its get-started page does not say).
 - That `gemini-3.8-flash` (the id in Firebase's web sample, read 14 Oct) is allowed on the free tier, and the free rate limits.
 - Which App Check provider is free and works for a demo.

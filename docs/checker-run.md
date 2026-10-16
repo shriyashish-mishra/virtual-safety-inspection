@@ -1,6 +1,6 @@
 # Checker run (T34)
 
-Run on 5 Oct 2026 by Shriya, against Nadeem's hand-made pairs (T4, PR #9) and the PLACEHOLDER parameters in `samples/handmade/placeholders.json`. Every number is made up to exercise the spec; none is a measurement. `TOLERANCE` is 0.01 m in `checker/config.py`, a placeholder until D8.
+Run on 5 Oct 2026 by Shriyashish Mishra, against Nadeem's hand-made pairs (T4, PR #9) and the PLACEHOLDER parameters in `samples/handmade/placeholders.json`. Every number is made up to exercise the spec; none is a measurement. `TOLERANCE` is 0.01 m in `checker/config.py`, a placeholder until D8.
 
 Command: `python3 checker/check.py samples/handmade/<pair>/geometry.json samples/handmade/<pair>/evidence.json --params samples/handmade/placeholders.json`
 

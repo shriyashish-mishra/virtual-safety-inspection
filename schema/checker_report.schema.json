@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "virtual-safety/checker_report.schema.json",
   "title": "checker_report.json v0.1",
-  "description": "Written by the checker (Shriya, T34). Read by the viewer and the tracker. overall is PASS only if every claim's result is PASS.",
+  "description": "Written by the checker (Shriyashish Mishra, T34). Read by the viewer and the tracker. overall is PASS only if every claim's result is PASS.",
   "type": "object",
   "required": ["schema_version", "room_id", "overall", "claims"],
   "additionalProperties": false,

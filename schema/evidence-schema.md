@@ -4,10 +4,10 @@ The frozen contract between lanes (T1). It turns the table in docs/interfaces.md
 
 | File | Schema | Written by | Read by |
 | --- | --- | --- | --- |
-| capture.json | [capture.schema.json](capture.schema.json) | Whoever films (Nadeem, T2); format owned by Shriya | Kaushal |
+| capture.json | [capture.schema.json](capture.schema.json) | Whoever films (Nadeem, T2); format owned by Shriyashish Mishra | Kaushal |
 | geometry.json | [geometry.schema.json](geometry.schema.json) | Kaushal | Nadeem, checker |
 | evidence.json | [evidence.schema.json](evidence.schema.json) | Nadeem | Viewer, checker |
-| checker_report.json | [checker_report.schema.json](checker_report.schema.json) | Checker (Shriya, T34) | Viewer, tracker |
+| checker_report.json | [checker_report.schema.json](checker_report.schema.json) | Checker (Shriyashish Mishra, T34) | Viewer, tracker |
 
 Check a file: `python3 schema/validate.py evidence path/to/evidence.json` (kinds: capture, geometry, evidence, checker_report). Check every sample and example: `python3 schema/validate.py --all`. Standard library only; any draft 2020-12 validator gives the same answer.
 
@@ -40,7 +40,7 @@ These go beyond what docs/interfaces.md fixed, so each needs a yes from the lane
 ## Written approvals (T1 done-when: all three)
 One line each: name, date, what is approved. Version stays 0.1 unless someone changes a field.
 
-- Kaushal, 15 Oct: APPROVED for the geometry.json choices in the table above (poses and `frame_index`, `marker_poses` keyed by marker id as a string, `points_ref`, `openings` with D11 marker ids, `scale_source`). Basis: `reconstruct/run.py` writes geometry that validates against `geometry.schema.json` on seven reconstructed synthetic clips (docs/spike-report.md, docs/rules-run.md), and `python3 schema/validate.py --all` prints ok for all six files. Not reviewed beyond that: the evidence and checker-report choices (Nadeem's and Shriya's); I only know that rules v0 writes evidence that validates on all of those clips. One gap, not a change: geometry carries no camera field of view, so pose-based visibility (T10) is not possible; it can be added later as an optional field. No field changes requested.
+- Kaushal, 15 Oct: APPROVED for the geometry.json choices in the table above (poses and `frame_index`, `marker_poses` keyed by marker id as a string, `points_ref`, `openings` with D11 marker ids, `scale_source`). Basis: `reconstruct/run.py` writes geometry that validates against `geometry.schema.json` on seven reconstructed synthetic clips (docs/spike-report.md, docs/rules-run.md), and `python3 schema/validate.py --all` prints ok for all six files. Not reviewed beyond that: the evidence and checker-report choices (Nadeem's and Shriyashish Mishra's); I only know that rules v0 writes evidence that validates on all of those clips. One gap, not a change: geometry carries no camera field of view, so pose-based visibility (T10) is not possible; it can be added later as an optional field. No field changes requested.
 - Nadeem: pending
-- Shriya: author (draft in PR #5); written approval of the final text pending
+- Shriyashish Mishra: author (draft in PR #5); written approval of the final text pending
 

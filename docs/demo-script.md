@@ -1,6 +1,6 @@
 # Demo script, 60-second Google cut (T19, DRAFT)
 
-Written 14 Oct by Shriya for the recording due Thu 15 Oct. The recording uses the three SYNTHETIC clips (rendered by tools/synthetic_room, not a real room), and the on-screen banner says so. Thresholds are placeholders until D8. Nothing here has been rehearsed yet (UNVERIFIED).
+Written 14 Oct by Shriyashish Mishra for the recording due Thu 15 Oct. The recording uses the three SYNTHETIC clips (rendered by tools/synthetic_room, not a real room), and the on-screen banner says so. Thresholds are placeholders until D8. Nothing here has been rehearsed yet (UNVERIFIED).
 
 ## Setup (before recording, works with no network)
 1. From the repo root: `python3 -m http.server 8000`

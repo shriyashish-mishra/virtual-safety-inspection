@@ -1,6 +1,6 @@
 # Virtual Safety Inspection: submission text
 
-Team Hallucinati (Shriya, Kaushal, Nadeem) for the Google Cloud AI Builder Cup 2026.
+Team Hallucinati (Shriyashish Mishra, Kaushal, Nadeem) for the Google Cloud AI Builder Cup 2026.
 
 ## One line
 Film a room with a phone; get a verdict on the exit and the door, an independent checker that re-verifies it, and an honest "not proven" with the exact missing view when the clip does not cover a claim.

@@ -1,8 +1,8 @@
 # Rules spec v0.1 (DRAFT, T4)
 
-**Status 15 Oct:** spec v0.2 and v0.3 (sections 2 and 4) are ACCEPTED by Shriya as Nadeem's backup owner, (docs/decisions.md). Nadeem, as owner, may change them; the rules and the checker then follow in one pull request. The words PROPOSED below are kept for history. Parameter values are still placeholders (D8).
+**Status 15 Oct:** spec v0.2 and v0.3 (sections 2 and 4) are ACCEPTED by Shriyashish Mishra as Nadeem's backup owner, (docs/decisions.md). Nadeem, as owner, may change them; the rules and the checker then follow in one pull request. The words PROPOSED below are kept for history. Parameter values are still placeholders (D8).
 
-Written by Nadeem (T4). The rules (rules/, Nadeem: T8, T9, T10) and the checker (checker/, Shriya: T34) are both written from this text and from nothing else (D10). If the two disagree, this spec is wrong and is fixed first. It describes formulas in words; it depends on no code in rules/.
+Written by Nadeem (T4). The rules (rules/, Nadeem: T8, T9, T10) and the checker (checker/, Shriyashish Mishra: T34) are both written from this text and from nothing else (D10). If the two disagree, this spec is wrong and is fixed first. It describes formulas in words; it depends on no code in rules/.
 
 Field names come from the draft schema v0.1 on branch `shriya/T1-evidence-schema` (not yet approved). If T1 changes a field, this spec follows it.
 
@@ -12,7 +12,7 @@ Field names come from the draft schema v0.1 on branch `shriya/T1-evidence-schema
 - The parameters in section 2.
 
 ### Point file (PROPOSED; the T1 draft names the file but not its format)
-For `points_ref.kind = point_cloud`: a JSON object `{"schema_version": "0.1", "units": "m", "points": [[x, y, z], ...]}` in the same world frame as `geometry.json`. Kaushal and Shriya must agree this or replace it (for example with PLY) before T7. `occupancy_grid` is not specified in v0.1.
+For `points_ref.kind = point_cloud`: a JSON object `{"schema_version": "0.1", "units": "m", "points": [[x, y, z], ...]}` in the same world frame as `geometry.json`. Kaushal and Shriyashish Mishra must agree this or replace it (for example with PLY) before T7. `occupancy_grid` is not specified in v0.1.
 
 ## 2. World frame and parameters
 - Lengths are metres. One right-handed world frame.
@@ -53,7 +53,7 @@ For an exit with centre `c` and into-room direction `d` (both on the floor):
 5. **Seen enough?** If `MIN_CORRIDOR_SEEN_FRACTION` and `CORRIDOR_CELL_M` are not blank: cut the corridor into squares of side `CORRIDOR_CELL_M` (`ceil(MIN_EXIT_CLEARANCE_M / CORRIDOR_CELL_M)` along `d` times `ceil(2 * CORRIDOR_HALF_WIDTH_M / CORRIDOR_CELL_M)` across, counted from the exit centre and from the left edge). The seen fraction is the number of squares holding at least one point with `z < FLOOR_BAND_M`, divided by the number of squares (capped at 1). If it is below `MIN_CORRIDOR_SEEN_FRACTION`: verdict `not_proven`, value null, unit null. Stop.
 6. **Pass.** value = the smallest `s` among obstacle points if there are any (it is then at least `MIN_EXIT_CLEARANCE_M`), otherwise `MIN_EXIT_CLEARANCE_M` (meaning "clear for at least the required distance"; the rule does not look further). Unit `m`. Verdict `pass`.
 
-**Why v0.2 (14 Oct, Kaushal; PROPOSED, Nadeem owns this spec and Shriya's checker must follow it).** On the reconstructed geometry of the three synthetic clips the v0.1 rule said `fail` at about 0.004 m on all three: 424, 735 and 474 points of the door leaf and wall sit at `s` of about 0 inside the height band, and clip 3 (corridor never filmed) still had 52 floor points. Changes: (a) the margin removes the door plane; (b) a seen fraction replaces a bare point count as the "was the floor filmed" test; (c) obstacles are tested first so that a visible obstacle is not hidden by thin floor coverage (the floor behind a box is hidden by the box). Blank new parameters give exactly the v0.1 behaviour, except that (c) changes the result when an obstacle is seen and the floor is not (v0.1: `not_proven`, v0.2: `fail`).
+**Why v0.2 (14 Oct, Kaushal; PROPOSED, Nadeem owns this spec and Shriyashish Mishra's checker must follow it).** On the reconstructed geometry of the three synthetic clips the v0.1 rule said `fail` at about 0.004 m on all three: 424, 735 and 474 points of the door leaf and wall sit at `s` of about 0 inside the height band, and clip 3 (corridor never filmed) still had 52 floor points. Changes: (a) the margin removes the door plane; (b) a seen fraction replaces a bare point count as the "was the floor filmed" test; (c) obstacles are tested first so that a visible obstacle is not hidden by thin floor coverage (the floor behind a box is hidden by the box). Blank new parameters give exactly the v0.1 behaviour, except that (c) changes the result when an obstacle is seen and the floor is not (v0.1: `not_proven`, v0.2: `fail`).
 
 **Why v0.3 (15 Oct, Kaushal; PROPOSED).** On the floor-marker reconstructions v0.2 gave a false `fail` on the clip whose corridor was never filmed (5 stray points past the margin, at s 0.19 to 0.35 m) and a clearance of 0.156 m on the clip with the box at 0.70 m (stray points at 0.16 m; the box face itself starts at about 0.65 m). The box face shows up as slices of 17 or more points per 0.05 m, the noise as slices of 9 or fewer. Blank new parameters give the v0.2 behaviour.
 

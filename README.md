@@ -1,6 +1,6 @@
 # Virtual Safety Inspection
 
-**Team Hallucinati** (Shriya, Kaushal, Nadeem), for the Google Cloud AI Builder Cup 2026.
+**Team Hallucinati** (Shriyashish Mishra, Kaushal, Nadeem), for the Google Cloud AI Builder Cup 2026.
 
 A phone clip of a room becomes a safety verdict (blocked exit, door clear width) with an evidence file. A separate checker recomputes every claim from the stored geometry and prints PASS or FAIL. When a view is missing, the system says **not proven** and asks for that exact view instead of guessing. Gemini explains the verdicts in plain words and can never change them.
 

@@ -1,6 +1,6 @@
 # Synthetic three-clip fixture set
 
-ILLUSTRATIVE: synthetic renders made by Shriya with tools/synthetic_room (PR #24) and preserved here by Nadeem, not real room captures. Scene dimensions are not tape measurements. These fixtures support synthetic testing and do not close T2's current real-capture requirement.
+ILLUSTRATIVE: synthetic renders made by Shriyashish Mishra with tools/synthetic_room (PR #24) and preserved here by Nadeem, not real room captures. Scene dimensions are not tape measurements. These fixtures support synthetic testing and do not close T2's current real-capture requirement.
 
 | Clip | Door width (scene m) | Exit clearance (scene m) | Supplied expected exit verdict | Video duration |
 | --- | --- | --- | --- | --- |

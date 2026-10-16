@@ -1,6 +1,6 @@
 # Deploy the viewer to Firebase Hosting (T16, D16 route B+)
 
-Written 14 Oct by Shriya for Kaushal, who owns D16 and the Firebase project. This puts the static viewer, its demo data and the three synthetic clips' answers online on the free Spark plan. It does NOT yet call Gemini: that needs the Firebase SDK (a dependency, Shriya's yes) and Kaushal's AI Logic setup. Nothing here needs a key or a card. Steps marked UNVERIFIED have not been run by anyone.
+Written 14 Oct by Shriyashish Mishra for Kaushal, who owns D16 and the Firebase project. This puts the static viewer, its demo data and the three synthetic clips' answers online on the free Spark plan. It does NOT yet call Gemini: that needs the Firebase SDK (a dependency, Shriyashish Mishra's yes) and Kaushal's AI Logic setup. Nothing here needs a key or a card. Steps marked UNVERIFIED have not been run by anyone.
 
 ## What is in the repo
 - `firebase.json`: hosting only, serves `hosting-dist/`. No project id is committed.
@@ -22,7 +22,7 @@ Written 14 Oct by Shriya for Kaushal, who owns D16 and the Firebase project. Thi
 ## Deployed 15 Oct 2026 (Kaushal)
 - Project `virtual-safety-hallucinati` (display name "Virtual Safety"), Spark plan, no billing, created with `npx firebase-tools projects:create`. Deployed with `npx firebase-tools deploy --only hosting --project virtual-safety-hallucinati` (no `.firebaserc`, nothing committed about the project).
 - URL: https://virtual-safety-hallucinati.web.app . VERIFIED 15 Oct: the viewer opens at `/viewer/?clip=clip2_blocked` in a real browser with no login (checked from a browser signed in to nothing for this site), shows exit_1_clear FAIL 0.7 m with checker PASS, and the chip "Is the exit clear?" shows the stored answer ("fail. The nearest obstacle is 0.7 m from the exit"). No console errors. clip3_unseen files and the demo index return 200.
-- Known issue (not fixed): the root page `/` redirects to `viewer/?clip=clip1_clear` and drops any query, so `/?clip=clip2_blocked` shows clip 1. Use `/viewer/?clip=clip2_blocked` and `/viewer/?clip=clip3_unseen`. The redirect is in `scripts/build_hosting.py` (Shriya's).
+- Known issue (not fixed): the root page `/` redirects to `viewer/?clip=clip1_clear` and drops any query, so `/?clip=clip2_blocked` shows clip 1. Use `/viewer/?clip=clip2_blocked` and `/viewer/?clip=clip3_unseen`. The redirect is in `scripts/build_hosting.py` (Shriyashish Mishra's).
 - NOT done: the live Gemini reword. `viewer/index.html` does not import `adapters/google/web/ask.js` or `ai.js`; `FIREBASE_CONFIG` in `ai.js` is still null; Firebase AI Logic and App Check are not set up on the project. The page answers only from stored answers.
 - `hosting-dist/` is tracked in git although `.gitignore` lists it; a rebuild changes `hosting-dist/viewer/demo/index.json`. Not touched here.
 

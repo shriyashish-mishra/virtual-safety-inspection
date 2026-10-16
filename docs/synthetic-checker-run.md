@@ -1,6 +1,6 @@
 # Checker on the synthetic clips (T14 fixture test)
 
-ILLUSTRATIVE. Run on 12 Oct 2026 by Shriya with `python3 tests/synthetic_checker.py` (exit 0). The clips are renders, not real captures (samples/t2/synthetic/), and the rule parameters are the PLACEHOLDERS in samples/handmade/placeholders.json until D8.
+ILLUSTRATIVE. Run on 12 Oct 2026 by Shriyashish Mishra with `python3 tests/synthetic_checker.py` (exit 0). The clips are renders, not real captures (samples/t2/synthetic/), and the rule parameters are the PLACEHOLDERS in samples/handmade/placeholders.json until D8.
 
 The test builds the evidence a correct rules implementation should write from the scene truth and `docs/rules-spec.md`, then runs `checker/check.py` on each clip's `geometry_truth.json` and point file. It imports nothing from `rules/` or `reconstruct/` (D10); the real rules (T8) and real reconstruction do not exist yet, so this is not a test of either.
 

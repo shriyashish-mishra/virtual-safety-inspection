@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "virtual-safety/capture.schema.json",
   "title": "capture.json v0.1",
-  "description": "Sits next to clip.mp4. Format owned by Shriya; filled in by whoever films (Nadeem in T2). Read by reconstruction (Kaushal).",
+  "description": "Sits next to clip.mp4. Format owned by Shriyashish Mishra; filled in by whoever films (Nadeem in T2). Read by reconstruction (Kaushal).",
   "type": "object",
   "required": ["schema_version", "room_id", "clip", "marker_id", "marker_size_m"],
   "additionalProperties": false,

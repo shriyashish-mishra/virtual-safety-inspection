@@ -1,12 +1,12 @@
 # Spike report (T5)
 
-**Status (14 Oct): T5 is done for the prototype only.** By the 14 Oct scope decision in docs/decisions.md, Shriya's synthetic clips stand in for the real ones until the prototype works; the real-clip rerun (T2) comes after. Every number below is from a synthetic render, measured against `scene_truth.json`, not a tape. No tolerance is chosen (D8).
+**Status (14 Oct): T5 is done for the prototype only.** By the 14 Oct scope decision in docs/decisions.md, Shriyashish Mishra's synthetic clips stand in for the real ones until the prototype works; the real-clip rerun (T2) comes after. Every number below is from a synthetic render, measured against `scene_truth.json`, not a tape. No tolerance is chosen (D8).
 
 **Recommendation (one line, INFERENCE from one synthetic clip): use VGGT for the prototype.** It took 32 frames in 12.2 s with 8.77 GB where Depth Anything 3 only fit 8 frames (13.55 GB), and the door-marker error was about the same (+3.92% against +4.21%). Repeat the comparison on the real clip before relying on it.
 
 ## Dry run on the synthetic clip (13 Oct 2026)
 
-Clip `clip1_clear.mp4` from Shriya's synthetic set, scale marker id 0 at 0.15 m (D7). Run on a free Kaggle notebook, 2x Tesla T4 (14.5 GiB each), by `reconstruct/spike.py` (SHA-256 `ef30f4ce...c959a`). Ground truth is the synthetic `geometry_truth.json`, not a tape.
+Clip `clip1_clear.mp4` from Shriyashish Mishra's synthetic set, scale marker id 0 at 0.15 m (D7). Run on a free Kaggle notebook, 2x Tesla T4 (14.5 GiB each), by `reconstruct/spike.py` (SHA-256 `ef30f4ce...c959a`). Ground truth is the synthetic `geometry_truth.json`, not a tape.
 
 | | VGGT (`facebook/VGGT-1B`) | Depth Anything 3 (`DA3NESTED-GIANT-LARGE`) |
 | --- | --- | --- |

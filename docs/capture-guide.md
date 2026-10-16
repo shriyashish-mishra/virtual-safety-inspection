@@ -1,6 +1,6 @@
 # Capture guide (DRAFT for T2)
 
-Written 6 Oct by Shriya (owner of the capture.json format, T1) for Nadeem's T2 filming and Kaushal's T5 spike. Anything marked UNVERIFIED or INFERENCE is a proposal to confirm, not a measured fact.
+Written 6 Oct by Shriyashish Mishra (owner of the capture.json format, T1) for Nadeem's T2 filming and Kaushal's T5 spike. Anything marked UNVERIFIED or INFERENCE is a proposal to confirm, not a measured fact.
 
 ## What to produce (VERIFIED)
 

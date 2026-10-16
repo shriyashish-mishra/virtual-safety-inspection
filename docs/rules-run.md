@@ -25,7 +25,7 @@ Spec v0.1 gave `fail` at about 0.004 m on all three clips: 424, 735 and 474 door
 
 - All four verdicts are now the wanted ones. VERIFIED for these four reconstructions only; the margin (0.15 m) and seen fraction (0.3) are PLACEHOLDERS picked from these same clips, so this is a fit, not a test.
 - The clip 2 value is wrong: stray points between 0.2 and 0.6 m (about 15 of them, noise around the box) set the nearest distance at 0.204 m, the box face is at about 0.6 m in the reconstruction (0.70 m true). The verdict does not change, the number the viewer shows does. Not fixed; a robust nearest distance (for example needing several points in a slice) is a spec choice for Nadeem.
-- The checker does not implement v0.2, so on these reconstructed files it says FAIL (it recomputes the v0.1 rule). That is the expected disagreement until Shriya updates it from the spec (D10: the rules author does not write the checker). On the truth geometry and the hand-made pair, where both versions agree, it says PASS.
+- The checker does not implement v0.2, so on these reconstructed files it says FAIL (it recomputes the v0.1 rule). That is the expected disagreement until Shriyashish Mishra updates it from the spec (D10: the rules author does not write the checker). On the truth geometry and the hand-made pair, where both versions agree, it says PASS.
 - Clips 2 and 3 were reconstructed with the old percentile floor (0.14 and 0.52 m off). No floor-marker versions of them exist, so the rules were not run with a correct floor on those two.
 
 ## With the floor marker, and spec v0.3 (15 Oct; Kaggle run of the three floor-marker clips, VGGT, 32 frames; files local, not in git)
@@ -44,7 +44,7 @@ Spec v0.2 gave the right verdict on clips 1 and 2 but a false `fail` at 0.19 m o
 | the three scene-truth geometries | pass, fail 0.70, not_proven | same | checker PASS on all three |
 
 - VERIFIED for these seven reconstructions of one synthetic room. The slice size (0.05 m) and count (12) are PLACEHOLDERS picked from these same clips: a fit, not a test.
-- The checker still follows v0.2, so it says FAIL on the clip 2 and clip 3 floor-marker reconstructions and on the old clip 2 (it recomputes the noise as an obstacle). It says PASS everywhere v0.2 and v0.3 agree. Shriya has to update it from the spec (D10: the rules author does not write the checker).
+- The checker still follows v0.2, so it says FAIL on the clip 2 and clip 3 floor-marker reconstructions and on the old clip 2 (it recomputes the noise as an obstacle). It says PASS everywhere v0.2 and v0.3 agree. Shriyashish Mishra has to update it from the spec (D10: the rules author does not write the checker).
 - Not shown: real footage; other rooms; a floor marker seen for longer or shorter; clips 2 and 3 with the floor off (the percentile-floor versions still pass, but their floors were 0.14 and 0.52 m wrong, so their agreement is partly luck).
 
 ## Placeholders added by these rules (none changes a verdict)
@@ -60,10 +60,10 @@ Any result on real footage; whether VIEW_HALF_ANGLE_DEG finds the frames a perso
 Done-when read from the internal task cards, results from the sections above. Prototype scope applies (synthetic clips stand in for real ones; docs/decisions.md).
 
 ### T8 blocked exit: NOT done
-Done when: verdict matches the ground truth on all 3 clips and the checker agrees. The verdicts match the scene truth on all six reconstructions and on the three truth geometries. The checker agrees on the truth geometries, and on the reconstructed ones only where spec v0.2 and v0.3 give the same result: it still follows v0.2, so it says FAIL on the clip 2 and clip 3 floor-marker reconstructions and on the old clip 2. Needs Shriya to update the checker to spec v0.3 (D10: I do not write it) and Nadeem to accept or change v0.3. Also Needs T1 (schema approvals pending) and T2 (real clips, replaced by the synthetic ones under the prototype scope).
+Done when: verdict matches the ground truth on all 3 clips and the checker agrees. The verdicts match the scene truth on all six reconstructions and on the three truth geometries. The checker agrees on the truth geometries, and on the reconstructed ones only where spec v0.2 and v0.3 give the same result: it still follows v0.2, so it says FAIL on the clip 2 and clip 3 floor-marker reconstructions and on the old clip 2. Needs Shriyashish Mishra to update the checker to spec v0.3 (D10: I do not write it) and Nadeem to accept or change v0.3. Also Needs T1 (schema approvals pending) and T2 (real clips, replaced by the synthetic ones under the prototype scope).
 
 ### T9 door clear width: done for the prototype
-Done when: value is within the D8 tolerance of the tape on all 3 clips. The "tape" is the scene truth, 0.86 m. D8 door-width tolerance is 0.10 m, signed by Kaushal only (15 Oct; Nadeem and Shriya pending). Door width in the geometry that `run.py` made, from the rules' value (the rule only measures the distance between the door edge points):
+Done when: value is within the D8 tolerance of the tape on all 3 clips. The "tape" is the scene truth, 0.86 m. D8 door-width tolerance is 0.10 m, signed by Kaushal only (15 Oct; Nadeem and Shriyashish Mishra pending). Door width in the geometry that `run.py` made, from the rules' value (the rule only measures the distance between the door edge points):
 
 | reconstruction | door width | error vs 0.86 m |
 | --- | --- | --- |
