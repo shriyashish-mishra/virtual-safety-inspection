@@ -21,16 +21,16 @@ export async function loadConfig(url = "../firebase-config.json") {
     return null;
   }
 }
-// Model id taken from the Firebase AI Logic web sample read 14 Oct; whether the free tier allows it is UNVERIFIED.
-export const MODEL = "gemini-3.8-flash";
+// Measured on the live project 17 Oct: gemini-3.8-flash allows only 20 requests a day on the free tier and needs thinking off to answer in
+// 4 s (8 to 9 s otherwise); gemini-3.5-flash-lite answered in 3.2 s with default settings and rejects thinkingConfig (HTTP 400), so none is set.
+// gemini-2.5-flash, 2.5-flash-lite and 2.0-flash return 404 (no longer available).
+export const MODEL = "gemini-3.5-flash-lite";
 
 export function makeRewrite(config = FIREBASE_CONFIG, modelId = MODEL) {
   if (!config) return null;
   const { appCheckSiteKey, ...firebaseConfig } = config;
   const app = initializeApp(firebaseConfig);
   if (appCheckSiteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(appCheckSiteKey), isTokenAutoRefreshEnabled: true });
-  // thinkingBudget 0: measured 17 Oct on the live project, gemini-3.8-flash answered in 8.4 to 9.0 s by default and in 4.3 s with
-  // thinking off, and a reword of a one-line answer needs no reasoning. thinkingLevel is rejected (HTTP 400) on this model.
-  const model = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), { model: modelId, generationConfig: { thinkingConfig: { thinkingBudget: 0 } } });
+  const model = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), { model: modelId });
   return async template => (await model.generateContent(PROMPT + template)).response.text().trim();
 }

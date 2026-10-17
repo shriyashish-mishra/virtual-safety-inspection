@@ -7,7 +7,7 @@ const VERDICT_RE = { pass: /\bpass(es|ed)?\b/, fail: /\bfail(s|ed|ure)?\b/, not_
 const NUM_RE = /\d+(?:\.\d+)?/g;
 
 export const PROMPT = "Reword the safety-inspection answer below in one or two plain sentences for a facility manager. " +
-  "Do not change any verdict, number or unit. Do not add facts. If a view is missing, keep the request.\n\n";
+  "Do not change any verdict, number or unit. Do not add facts, advice or instructions. Name each measurement as the text does (a distance stays a distance). If a view is missing, keep the request.\n\n";
 
 export function pickClaims(evidence, question) {
   const q = question.toLowerCase().replaceAll("_", " ");
@@ -24,8 +24,15 @@ export function describe(claim, evidence) {
     const ask = (evidence.requested_view || {}).description || "a view that covers it";
     return `${claim.id}: not proven. The evidence does not cover it. Missing view: ${ask}.`;
   }
-  return `${claim.id} (${claim.type}): ${VERDICT_WORDS[claim.verdict]}, measured ${claim.value} ${claim.unit} ` +
-    `(confidence ${claim.confidence}, frames [${claim.frame_ids.join(", ")}]).`;
+  const tail = `(confidence ${claim.confidence}, frames [${claim.frame_ids.join(", ")}]).`;
+  const word = VERDICT_WORDS[claim.verdict];
+  if (claim.type === "blocked_exit") {
+    // same wording as adapters/google/answer.py: the value of a pass is the distance checked, not a measurement of free space
+    return claim.verdict === "pass"
+      ? `${claim.id} (${claim.type}): ${word}. No obstacle found within ${claim.value} ${claim.unit} of the exit ${tail}`
+      : `${claim.id} (${claim.type}): ${word}. The nearest obstacle is ${claim.value} ${claim.unit} from the exit ${tail}`;
+  }
+  return `${claim.id} (${claim.type}): ${word}, measured ${claim.value} ${claim.unit} ${tail}`;
 }
 
 // Returns null if the rewrite is acceptable, else the reason it was discarded.
@@ -50,15 +57,21 @@ export function guard(rewrite, template, claims) {
 }
 
 // A model that never answers must not leave the page on "Asking..." (the free tier stalls and returns 503 at times; with thinking off a reword takes about 4 s, with it on 8 to 9 s).
-export const REWRITE_TIMEOUT_MS = 15000;
+export const REWRITE_TIMEOUT_MS = 12000;
 function withTimeout(promise, ms) {
   let timer;
   const stop = new Promise((_, reject) => { timer = setTimeout(() => { const e = new Error("no answer in " + ms + " ms"); e.name = "TimeoutError"; reject(e); }, ms); });
   return Promise.race([promise, stop]).finally(() => clearTimeout(timer));
 }
 
+// After a quota error or a timeout the model is skipped for a while, so every later question answers at once from the evidence
+// instead of making the visitor wait again (the free tier allows only a few requests a day).
+export const PAUSE_MS = 180000;
+let pausedUntil = 0;
+export function resetPause() { pausedUntil = 0; }
+
 // rewrite: optional async (templateText) => reworded text. Any failure, including a timeout, leaves the template answer standing.
-export async function answer(evidence, question, rewrite, { timeoutMs = REWRITE_TIMEOUT_MS } = {}) {
+export async function answer(evidence, question, rewrite, { timeoutMs = REWRITE_TIMEOUT_MS, pauseMs = PAUSE_MS } = {}) {
   const claims = pickClaims(evidence, question);
   const template = claims.map(c => describe(c, evidence)).join(" ");
   const out = {
@@ -66,6 +79,7 @@ export async function answer(evidence, question, rewrite, { timeoutMs = REWRITE_
     claims: claims.map(({ id, type, verdict, value, unit }) => ({ id, type, verdict, value, unit })),
     answer: template, source: "evidence_template",
   };
+  if (rewrite && Date.now() < pausedUntil) { out.explanation_discarded = "model paused after an earlier error"; return out; }
   if (rewrite) {
     try {
       const text = await withTimeout(Promise.resolve().then(() => rewrite(template)), timeoutMs);
@@ -73,6 +87,7 @@ export async function answer(evidence, question, rewrite, { timeoutMs = REWRITE_
       if (problem === null) { out.answer = text; out.source = "model_rewording"; } else out.explanation_discarded = problem;
     } catch (e) {
       out.explanation_discarded = `model call failed: ${e && e.name ? e.name : "error"}`;
+      if (/429|quota|TimeoutError/i.test(`${e && e.name} ${e && e.message}`)) pausedUntil = Date.now() + pauseMs;
     }
   }
   return out;

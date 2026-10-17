@@ -1,16 +1,15 @@
 [
  {
   "question": "Is the exit clear?",
-  "answer": "exit_1_clear: not proven. The evidence does not cover it. Missing view: Film the floor in front of exit_1 from about 2 m away, with the exit marker in frame.",
-  "source": "evidence_template",
+  "answer": "Exit 1 is not proven because the evidence does not cover it. Please film the floor in front of exit_1 from about 2 m away, with the exit marker in frame.",
+  "source": "model_rewording",
   "claims": [
    "exit_1_clear"
-  ],
-  "explanation_discarded": "model call failed: HTTPError 503"
+  ]
  },
  {
   "question": "How wide is the door?",
-  "answer": "Door 1 clear width passed at a measured 0.86 m.",
+  "answer": "Door clear width (door_1_width) passed at a measured distance of 0.86 m.",
   "source": "model_rewording",
   "claims": [
    "door_1_width"
@@ -18,22 +17,20 @@
  },
  {
   "question": "Is this room safe?",
-  "answer": "exit_1_clear: not proven. The evidence does not cover it. Missing view: Film the floor in front of exit_1 from about 2 m away, with the exit marker in frame. door_1_width (door_clear_width): pass, measured 0.86 m (confidence 0.85, frames [0, 18, 107]).",
-  "source": "evidence_template",
+  "answer": "Exit 1 is not proven because the evidence does not cover it; please film the floor in front of exit 1 from about 2 m away with the exit marker in frame. Door 1 width (door_clear_width) passes at a measured 0.86 m.",
+  "source": "model_rewording",
   "claims": [
    "exit_1_clear",
    "door_1_width"
-  ],
-  "explanation_discarded": "model call failed: HTTPError 503"
+  ]
  },
  {
   "question": "What do you need from me?",
-  "answer": "exit_1_clear: not proven. The evidence does not cover it. Missing view: Film the floor in front of exit_1 from about 2 m away, with the exit marker in frame. door_1_width (door_clear_width): pass, measured 0.86 m (confidence 0.85, frames [0, 18, 107]).",
-  "source": "evidence_template",
+  "answer": "Exit 1 is not proven because the evidence does not cover it; please film the floor in front of exit 1 from about 2 m away, with the exit marker in frame. Door 1 width passes with a measured door clear width of 0.86 m.",
+  "source": "model_rewording",
   "claims": [
    "exit_1_clear",
    "door_1_width"
-  ],
-  "explanation_discarded": "model call failed: TimeoutError"
+  ]
  }
 ]

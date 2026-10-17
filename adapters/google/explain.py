@@ -16,7 +16,7 @@ NUM_RE = re.compile(r"\d+(?:\.\d+)?")
 OVERCLAIM_RE = re.compile(r"\b(safe|unsafe|compliant|compliance|certified|hazard[- ]free)\b")  # the evidence never says safe
 
 PROMPT = ("Reword the safety-inspection answer below in one or two plain sentences for a facility manager. "
-          "Do not change any verdict, number or unit. Do not add facts. If a view is missing, keep the request.\n\n")
+          "Do not change any verdict, number or unit. Do not add facts, advice or instructions. Name each measurement as the text does (a distance stays a distance). If a view is missing, keep the request.\n\n")
 
 
 def guard(rewrite, template, claims):
@@ -36,8 +36,12 @@ def guard(rewrite, template, claims):
     if extra:
         return f"numbers not in the evidence: {sorted(extra)}"
     for c in claims:
-        if c["value"] is not None and str(c["value"]) not in rewrite:
-            return f"missing value {c['value']}"
+        if c["value"] is not None:
+            forms = {str(c["value"])}  # a whole number may be written 1 or 1.0
+            if float(c["value"]).is_integer():
+                forms.add(str(int(c["value"])))
+            if not any(f in rewrite for f in forms):
+                return f"missing value {c['value']}"
     if any(c["verdict"] == "not_proven" for c in claims) and "view" not in low and "film" not in low:
         return "requested view dropped"
     return None

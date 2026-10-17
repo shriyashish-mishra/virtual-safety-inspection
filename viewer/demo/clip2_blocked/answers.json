@@ -1,40 +1,36 @@
 [
  {
   "question": "Is the exit clear?",
-  "answer": "exit_1_clear (blocked_exit): fail. The nearest obstacle is 0.7 m from the exit (confidence 0.9, frames [106, 112, 117]).",
-  "source": "evidence_template",
+  "answer": "Exit 1 is blocked, which is a fail based on the measured distance of 0.7 m.",
+  "source": "model_rewording",
   "claims": [
    "exit_1_clear"
-  ],
-  "explanation_discarded": "model call failed: TimeoutError"
+  ]
  },
  {
   "question": "How wide is the door?",
-  "answer": "door_1_width (door_clear_width): pass, measured 0.86 m (confidence 0.85, frames [0, 102, 125]).",
-  "source": "evidence_template",
+  "answer": "Door 1 (door_clear_width) passed with a measured distance of 0.86 m.",
+  "source": "model_rewording",
   "claims": [
    "door_1_width"
-  ],
-  "explanation_discarded": "model call failed: TimeoutError"
+  ]
  },
  {
   "question": "Is this room safe?",
-  "answer": "exit_1_clear (blocked_exit): fail. The nearest obstacle is 0.7 m from the exit (confidence 0.9, frames [106, 112, 117]). door_1_width (door_clear_width): pass, measured 0.86 m (confidence 0.85, frames [0, 102, 125]).",
-  "source": "evidence_template",
+  "answer": "Exit 1 failed the safety inspection because the nearest obstacle is 0.7 m from the exit. Door 1 passed with a measured door clear width of 0.86 m.",
+  "source": "model_rewording",
   "claims": [
    "exit_1_clear",
    "door_1_width"
-  ],
-  "explanation_discarded": "model call failed: HTTPError 503"
+  ]
  },
  {
   "question": "What do you need from me?",
-  "answer": "exit_1_clear (blocked_exit): fail. The nearest obstacle is 0.7 m from the exit (confidence 0.9, frames [106, 112, 117]). door_1_width (door_clear_width): pass, measured 0.86 m (confidence 0.85, frames [0, 102, 125]).",
-  "source": "evidence_template",
+  "answer": "Exit 1 failed the blocked exit check because the nearest obstacle is 0.7 m away. Door 1 passed the door clear width check with a measurement of 0.86 m.",
+  "source": "model_rewording",
   "claims": [
    "exit_1_clear",
    "door_1_width"
-  ],
-  "explanation_discarded": "model call failed: HTTPError 503"
+  ]
  }
 ]

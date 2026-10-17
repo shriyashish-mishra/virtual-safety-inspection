@@ -38,3 +38,12 @@ The live question box used to wait for Gemini forever when the free tier stalled
 
 ## Gemini latency and the timeout (17 Oct, evening)
 Measured on the live project with `gemini-3.8-flash`: by default a reword took 8.4 to 9.0 s, which is longer than the first 7 s timeout, so every call was cut off and the page always showed the evidence answer. With `thinkingConfig: { thinkingBudget: 0 }` (now set in `adapters/google/web/ai.js`) it took 4.3 s. The timeout in `ask.js` is now 15 s as a safety margin. `thinkingLevel` is rejected by this model (HTTP 400). Other model ids tried (`gemini-2.5-flash`, `gemini-2.5-flash-lite`, `gemini-2.0-flash`) return HTTP 404 "no longer available". Needs a redeploy to reach the live site.
+
+## Gemini quota and the final setup (17 Oct, night)
+The live box stopped answering again after the thinking fix: `gemini-3.8-flash` allows only 20 requests a day per project on the free tier (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`, limit 20; the error said to retry in about 7 hours), and testing used it up. Final setup, all measured on the live project:
+- Model is now `gemini-3.5-flash-lite` (`adapters/google/web/ai.js`): 3.2 s default, no thinking setting (it rejects `thinkingConfig` with HTTP 400). Its own daily quota is UNVERIFIED.
+- The twelve stored chip answers (`viewer/demo/*/answers.json`) are now real Gemini rewordings accepted by the guard, so the chips cost no quota and answer instantly. Only the typed question calls Gemini.
+- After a quota error or a timeout the page skips the model for 3 minutes (`PAUSE_MS` in `ask.js`), so later questions answer at once instead of waiting; the timeout is 12 s.
+- The prompt now also says no advice and no change of what a measurement is called. The browser's `describe()` now uses the same wording as `adapters/google/answer.py` (a pass reads "no obstacle found within 1.0 m", not "measured 1.0 m").
+- The Python and browser guards accept a whole number written either way (1 or 1.0).
+Needs a redeploy to reach the live site.

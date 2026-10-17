@@ -52,7 +52,7 @@
     const allowed = new Set(template.match(NUM_RE) || []);
     const extra = [...new Set(rewrite.match(NUM_RE) || [])].filter(n => !allowed.has(n));
     if (extra.length) return `numbers not in the evidence: [${extra.sort().map(n => "'" + n + "'").join(", ")}]`;
-    for (const c of claims) if (c.value !== null && c.value !== undefined && !rewrite.includes(fmt(c.value))) return `missing value ${fmt(c.value)}`;
+    for (const c of claims) if (c.value !== null && c.value !== undefined && ![fmt(c.value), String(c.value)].some(f => rewrite.includes(f))) return `missing value ${fmt(c.value)}`; // a whole number may be written 1 or 1.0
     if (claims.some(c => c.verdict === "not_proven") && !low.includes("view") && !low.includes("film")) return "requested view dropped";
     return null;
   }
