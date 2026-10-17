@@ -29,6 +29,8 @@ export function makeRewrite(config = FIREBASE_CONFIG, modelId = MODEL) {
   const { appCheckSiteKey, ...firebaseConfig } = config;
   const app = initializeApp(firebaseConfig);
   if (appCheckSiteKey) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(appCheckSiteKey), isTokenAutoRefreshEnabled: true });
-  const model = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), { model: modelId });
+  // thinkingBudget 0: measured 17 Oct on the live project, gemini-3.8-flash answered in 8.4 to 9.0 s by default and in 4.3 s with
+  // thinking off, and a reword of a one-line answer needs no reasoning. thinkingLevel is rejected (HTTP 400) on this model.
+  const model = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), { model: modelId, generationConfig: { thinkingConfig: { thinkingBudget: 0 } } });
   return async template => (await model.generateContent(PROMPT + template)).response.text().trim();
 }

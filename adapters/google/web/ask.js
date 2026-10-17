@@ -49,8 +49,8 @@ export function guard(rewrite, template, claims) {
   return null;
 }
 
-// A model that never answers must not leave the page on "Asking..." (the free tier stalls and returns 503 at times).
-export const REWRITE_TIMEOUT_MS = 7000;
+// A model that never answers must not leave the page on "Asking..." (the free tier stalls and returns 503 at times; with thinking off a reword takes about 4 s, with it on 8 to 9 s).
+export const REWRITE_TIMEOUT_MS = 15000;
 function withTimeout(promise, ms) {
   let timer;
   const stop = new Promise((_, reject) => { timer = setTimeout(() => { const e = new Error("no answer in " + ms + " ms"); e.name = "TimeoutError"; reject(e); }, ms); });

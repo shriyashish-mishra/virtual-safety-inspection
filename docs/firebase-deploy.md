@@ -35,3 +35,6 @@ Written 14 Oct by Shriyashish Mishra for Kaushal, who owns D16 and the Firebase 
 
 ## Gemini timeout (17 Oct)
 The live question box used to wait for Gemini forever when the free tier stalled or returned 503 (seen 17 Oct: the box sat on "Asking..." for over 18 s). `adapters/google/web/ask.js` now gives the model 7 seconds (`REWRITE_TIMEOUT_MS`) and then shows the evidence answer with the note "model call failed: TimeoutError". The fix only reaches the live site after a redeploy: `python3 scripts/build_hosting.py` then the deploy command above (Kaushal's Google account). The cause of the stalls (model id `gemini-3.8-flash` in `adapters/google/web/ai.js`, quota or overload) is UNVERIFIED; check it in the Firebase console.
+
+## Gemini latency and the timeout (17 Oct, evening)
+Measured on the live project with `gemini-3.8-flash`: by default a reword took 8.4 to 9.0 s, which is longer than the first 7 s timeout, so every call was cut off and the page always showed the evidence answer. With `thinkingConfig: { thinkingBudget: 0 }` (now set in `adapters/google/web/ai.js`) it took 4.3 s. The timeout in `ask.js` is now 15 s as a safety margin. `thinkingLevel` is rejected by this model (HTTP 400). Other model ids tried (`gemini-2.5-flash`, `gemini-2.5-flash-lite`, `gemini-2.0-flash`) return HTTP 404 "no longer available". Needs a redeploy to reach the live site.
